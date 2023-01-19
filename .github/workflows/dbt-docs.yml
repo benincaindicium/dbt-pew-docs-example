@@ -1,0 +1,45 @@
+name: Publish DBT docs
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  id-token: write
+
+env:
+
+jobs:
+  publish_docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Prepare Path
+        run: |
+          mkdir -p public
+          ls
+
+      - name: Copy docs from S3
+        uses: keithweaver/aws-s3-github-action@v1.0.0
+        with:
+          command: sync
+          source: s3://reps-indicium-dbt-docs-test/
+          destination: ./public/
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: us-east-1
+      
+      
+      # publishes our dbt documentation to
+      # https://friendly-lamp-96d8cf45.pages.github.io/
+      - name: Publish 🚀
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
