@@ -9,8 +9,6 @@ permissions:
   contents: write
   id-token: write
 
-env:
-
 jobs:
   publish_docs:
     runs-on: ubuntu-latest
@@ -33,8 +31,7 @@ jobs:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: us-east-1
-      
-      
+
       # publishes our dbt documentation to
       # https://friendly-lamp-96d8cf45.pages.github.io/
       - name: Publish 🚀
